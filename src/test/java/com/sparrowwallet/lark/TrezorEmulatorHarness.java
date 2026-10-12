@@ -117,7 +117,7 @@ public class TrezorEmulatorHarness {
         ExtendedKey accountKey = client.getPubKeyAtPath(accountPath);
 
         Wallet wallet = new Wallet();
-        wallet.setPolicyType(PolicyType.SINGLE_HD);
+        wallet.setPolicyType(PolicyType.SINGLE_SEGWIT);
         wallet.setScriptType(scriptType);
 
         Keystore keystore = new Keystore();
@@ -127,7 +127,7 @@ public class TrezorEmulatorHarness {
         keystore.setExtendedPublicKey(accountKey);
         wallet.getKeystores().add(keystore);
 
-        wallet.setDefaultPolicy(Policy.getPolicy(PolicyType.SINGLE_HD, scriptType, wallet.getKeystores(), null));
+        wallet.setDefaultPolicy(Policy.getPolicy(PolicyType.SINGLE_SEGWIT, scriptType, wallet.getKeystores(), null));
         wallet.getNode(KeyPurpose.RECEIVE);
         return wallet;
     }
@@ -144,7 +144,7 @@ public class TrezorEmulatorHarness {
 
     private static Wallet multisigWallet(EmulatorClient client) throws Exception {
         Wallet wallet = new Wallet();
-        wallet.setPolicyType(PolicyType.MULTI_HD);
+        wallet.setPolicyType(PolicyType.MULTI_SEGWIT);
         wallet.setScriptType(ScriptType.P2WSH);
 
         String accountPath = KeyDerivation.writePath(ScriptType.P2WSH.getDefaultDerivation());
@@ -156,9 +156,9 @@ public class TrezorEmulatorHarness {
         wallet.getKeystores().add(deviceKeystore);
 
         DeterministicSeed seed = new DeterministicSeed(COSIGNER_MNEMONIC, "", 0, DeterministicSeed.Type.BIP39);
-        wallet.getKeystores().add(Keystore.fromSeed(seed, PolicyType.MULTI_HD, ScriptType.P2WSH.getDefaultDerivation()));
+        wallet.getKeystores().add(Keystore.fromSeed(seed, PolicyType.MULTI_SEGWIT, ScriptType.P2WSH.getDefaultDerivation()));
 
-        wallet.setDefaultPolicy(Policy.getPolicy(PolicyType.MULTI_HD, ScriptType.P2WSH, wallet.getKeystores(), 2));
+        wallet.setDefaultPolicy(Policy.getPolicy(PolicyType.MULTI_SEGWIT, ScriptType.P2WSH, wallet.getKeystores(), 2));
         wallet.getNode(KeyPurpose.RECEIVE);
         return wallet;
     }
@@ -169,7 +169,7 @@ public class TrezorEmulatorHarness {
      */
     private static Wallet twoDeviceKeyWallet(EmulatorClient client) throws DeviceException {
         Wallet wallet = new Wallet();
-        wallet.setPolicyType(PolicyType.MULTI_HD);
+        wallet.setPolicyType(PolicyType.MULTI_SEGWIT);
         wallet.setScriptType(ScriptType.P2WSH);
 
         for(int account = 0; account < 2; account++) {
@@ -182,7 +182,7 @@ public class TrezorEmulatorHarness {
             wallet.getKeystores().add(keystore);
         }
 
-        wallet.setDefaultPolicy(Policy.getPolicy(PolicyType.MULTI_HD, ScriptType.P2WSH, wallet.getKeystores(), 2));
+        wallet.setDefaultPolicy(Policy.getPolicy(PolicyType.MULTI_SEGWIT, ScriptType.P2WSH, wallet.getKeystores(), 2));
         wallet.getNode(KeyPurpose.RECEIVE);
         return wallet;
     }
@@ -313,7 +313,7 @@ public class TrezorEmulatorHarness {
             psbtInput.getDerivedPublicKeys().put(pubKey, keyDerivation);
         }
         if(scriptType == ScriptType.P2SH_P2WPKH) {
-            psbtInput.setRedeemScript(ScriptType.P2WPKH.getOutputScript(PolicyType.SINGLE_HD, pubKey));
+            psbtInput.setRedeemScript(ScriptType.P2WPKH.getOutputScript(PolicyType.SINGLE_SEGWIT, pubKey));
         }
 
         psbtInput.setSigHash(requestedSigHash);
