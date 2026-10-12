@@ -35,7 +35,7 @@ dependencies {
     implementation('com.google.protobuf:protobuf-java:4.34.0')
     implementation('commons-codec:commons-codec:1.21.0')
     implementation('org.slf4j:slf4j-api:2.0.17')
-    implementation('com.sparrowwallet:tern:1.0.6')
+    implementation(project(':tern'))
     implementation('io.reactivex.rxjava2:rxjava:2.2.21')
     implementation('org.jetbrains:annotations:26.0.2')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.14.1')
@@ -62,6 +62,15 @@ extraJavaModuleInfo {
     module('org.usb4java:usb4java', 'org.usb4java') {
         exports('org.usb4java')
     }
+    // Maven Central usb4java ships one native jar per OS; they are not JPMS modules.
+    // Unique names: all seven sit on the classpath from the usb4java POM.
+    automaticModule('libusb4java-1.3.0-linux-x86.jar', 'org.usb4java.libusb4java.linux.x86')
+    automaticModule('libusb4java-1.3.0-linux-x86-64.jar', 'org.usb4java.libusb4java.linux.x86_64')
+    automaticModule('libusb4java-1.3.0-linux-arm.jar', 'org.usb4java.libusb4java.linux.arm')
+    automaticModule('libusb4java-1.3.0-linux-aarch64.jar', 'org.usb4java.libusb4java.linux.aarch64')
+    automaticModule('libusb4java-1.3.0-win32-x86.jar', 'org.usb4java.libusb4java.win32.x86')
+    automaticModule('libusb4java-1.3.0-win32-x86-64.jar', 'org.usb4java.libusb4java.win32.x86_64')
+    automaticModule('libusb4java-1.3.0-darwin-x86-64.jar', 'org.usb4java.libusb4java.darwin.x86_64')
     module('com.google.code.findbugs:jsr305', 'com.google.code.findbugs.jsr305')
 }
 //Prints the test runtime classpath, so a harness can be launched with plain java the way the
